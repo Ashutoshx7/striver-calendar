@@ -1,0 +1,65 @@
+<svg
+  width="1600"
+  height="900"
+  viewBox="0 0 1600 900"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <linearGradient id="sky" x1="800" y1="0" x2="800" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B8CCDF" />
+      <stop offset="1" stop-color="#E5EEF7" />
+    </linearGradient>
+    <linearGradient id="ridge" x1="0" y1="540" x2="1570" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1E3A5F" />
+      <stop offset="1" stop-color="#314E7A" />
+    </linearGradient>
+    <linearGradient id="peak" x1="430" y1="180" x2="1260" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7393B4" />
+      <stop offset="1" stop-color="#4D6B90" />
+    </linearGradient>
+    <radialGradient id="mist" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(770 390) rotate(90) scale(450 980)">
+      <stop stop-color="white" stop-opacity="0.65" />
+      <stop offset="1" stop-color="white" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#sky)" />
+
+  <path
+    d="M0 560L210 510L360 565L500 470L680 540L835 430L985 515L1160 440L1375 570L1600 500V900H0V560Z"
+    fill="url(#peak)"
+  />
+  <path
+    d="M0 640L230 600L420 660L620 530L790 620L980 500L1220 620L1410 580L1600 650V900H0V640Z"
+    fill="#6283A5"
+    opacity="0.68"
+  />
+  <path
+    d="M0 780L350 710L620 795L900 620L1190 780L1420 740L1600 780V900H0V780Z"
+    fill="url(#ridge)"
+  />
+
+  <ellipse cx="790" cy="510" rx="620" ry="260" fill="url(#mist)" />
+
+  <path
+    d="M710 420L780 395L860 410L910 438L845 455L775 448L710 420Z"
+    fill="#1E293B"
+    opacity="0.95"
+  />
+  <path d="M818 398L860 410L847 417L812 407L818 398Z" fill="#E2E8F0" />
+  <path d="M865 413L891 430L881 438L861 423L865 413Z" fill="#EF4444" />
+  <path d="M823 415L851 427L838 442L813 430L823 415Z" fill="#3B82F6" />
+  <path d="M846 443L870 452L862 466L838 458L846 443Z" fill="#0F172A" />
+  <path d="M862 460L885 468L904 438L894 432L879 455L862 460Z" fill="#111827" />
+  <path d="M904 432L920 377L927 380L911 437L904 432Z" fill="#334155" />
+
+  <g opacity="0.18">
+    <circle cx="220" cy="210" r="2" fill="white" />
+    <circle cx="280" cy="270" r="1.5" fill="white" />
+    <circle cx="410" cy="185" r="1.7" fill="white" />
+    <circle cx="1320" cy="230" r="1.8" fill="white" />
+    <circle cx="1190" cy="165" r="1.4" fill="white" />
+    <circle cx="990" cy="210" r="1.6" fill="white" />
+  </g>
+</svg>
