@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
@@ -140,6 +141,7 @@ function buildCalendarCells(viewDate: Date): CalendarCell[] {
 }
 
 export default function Home() {
+  const [direction, setDirection] = useState(1);
   const [viewDate, setViewDate] = useState(() => new Date(2022, 0, 1));
   const [note, setNote] = useState("");
   const [rangeNote, setRangeNote] = useState("");
@@ -159,6 +161,31 @@ export default function Home() {
   const monthName = monthFormatter.format(viewDate).toUpperCase();
   const yearLabel = String(viewDate.getFullYear());
   const cells = useMemo(() => buildCalendarCells(viewDate), [viewDate]);
+  const flipVariants = {
+    initial: (dir: number) => ({
+      rotateX: dir > 0 ? -90 : 90,
+      opacity: 0,
+      transformOrigin: "top center",
+      scale: 0.98,
+    }),
+    center: {
+      rotateX: 0,
+      opacity: 1,
+      transformOrigin: "top center",
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      },
+    },
+    exit: (dir: number) => ({
+      rotateX: dir > 0 ? 90 : -90,
+      opacity: 0,
+      transformOrigin: "top center",
+      scale: 0.98,
+      transition: { duration: 0.4 },
+    }),
+  };
   const monthStorageKey = `${NOTE_STORAGE_PREFIX}:${toMonthKey(viewDate)}`;
 
   const previewRange = useMemo(() => {
@@ -213,6 +240,7 @@ export default function Home() {
   }, [endDate, startDate]);
 
   function setMonthWithOffset(offset: number) {
+    setDirection(offset > 0 ? 1 : -1);
     setViewDate((previous) => {
       return new Date(previous.getFullYear(), previous.getMonth() + offset, 1);
     });
@@ -641,7 +669,7 @@ export default function Home() {
           </svg>
         </div>
 
-        <article className="relative mt-[-2px] aspect-[548/791] overflow-hidden border border-[#d7d7dc] bg-[#fcfcfd] shadow-[0_26px_48px_rgba(0,0,0,0.19)]">
+        <div className="mt-[-2px] relative z-10 w-full aspect-[548/791]" style={{ perspective: "1500px" }}><AnimatePresence custom={direction} mode="popLayout" initial={false}><motion.article key={toMonthKey(viewDate)} custom={direction} variants={flipVariants} initial="initial" animate="center" exit="exit" className="absolute inset-0 overflow-hidden border border-[#d7d7dc] bg-[#fcfcfd] shadow-[0_26px_48px_rgba(0,0,0,0.19)]">
           <header className="relative h-[48%]">
             {!videoFailed && (
               <video
@@ -733,34 +761,12 @@ export default function Home() {
             </aside>
 
             <section className="min-h-0 pt-1 sm:pt-3">
-              <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8b8b90]">
+              <div className="mb-2 flex items-center justify-center">
+                <span className="text-[12px] font-bold uppercase tracking-[0.1em] text-[#8b8b90]">
                   {monthName} {yearLabel}
                 </span>
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => setMonthWithOffset(-1)}
-                    className="rounded-md border border-[#d6d7dc] bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#6d6f77] transition hover:border-[#c3c7cf] hover:text-[#43454b]"
-                  >
-                    Prev
-                  </button>
-                  <button
-                    type="button"
-                    onClick={goToCurrentMonth}
-                    className="rounded-md border border-[#d6d7dc] bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#6d6f77] transition hover:border-[#c3c7cf] hover:text-[#43454b]"
-                  >
-                    Today
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMonthWithOffset(1)}
-                    className="rounded-md border border-[#d6d7dc] bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#6d6f77] transition hover:border-[#c3c7cf] hover:text-[#43454b]"
-                  >
-                    Next
-                  </button>
-                </div>
               </div>
+
 
               <div className="grid grid-cols-7 gap-x-1 text-center">
                 {WEEK_DAYS.map((day) => {
@@ -863,7 +869,33 @@ export default function Home() {
               </div>
             </section>
           </div>
-        </article>
+        </motion.article></AnimatePresence></div>
+
+        <div className="relative z-20 mt-[-1px] flex h-[52px] w-full items-center justify-between rounded-b-[8px] bg-[#eceff2] px-8 shadow-[0_10px_24px_rgba(0,0,0,0.08)] border border-[#d7d7dc] border-t-0">
+          <button
+            type="button"
+            onClick={() => setMonthWithOffset(-1)}
+            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#6d6f77] transition hover:text-[#43454b]"
+          >
+            ← PREV
+          </button>
+          
+          <button
+            type="button"
+            onClick={goToCurrentMonth}
+            className="flex items-center justify-center text-[10px] font-bold uppercase tracking-[0.08em] text-[#8b8b90] transition hover:text-[#43454b] px-3.5 py-1.5 rounded-md bg-[#e4e5e8]"
+          >
+            TODAY
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setMonthWithOffset(1)}
+            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#27A8DF] transition hover:text-[#106F9A]"
+          >
+            NEXT →
+          </button>
+        </div>
       </section>
     </main>
   );
