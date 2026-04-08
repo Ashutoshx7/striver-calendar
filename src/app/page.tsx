@@ -19,7 +19,22 @@ const RANGE_STORAGE_KEY = "wall-calendar:range:v3";
 const RANGE_NOTE_STORAGE_PREFIX = "wall-calendar:range-note:v1";
 const VIEW_STORAGE_KEY = "wall-calendar:view:v1";
 const WEEK_DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-const ACCENT = "#27A8DF";
+
+const MONTH_THEMES = [
+  { name: "Winter Blue", color: "#27A8DF", bg: "bg-[#e5e5e8]", gradient: "from-[#e5e5e8] to-[#d1d5db]" }, // Jan
+  { name: "Rose Pink", color: "#F43F5E", bg: "bg-[#f5e6e8]", gradient: "from-[#f5e6e8] to-[#fbcfe8]" },   // Feb
+  { name: "Spring Green", color: "#10B981", bg: "bg-[#e6f5e8]", gradient: "from-[#e6f5e8] to-[#bbf7d0]" }, // Mar
+  { name: "Rainy Purple", color: "#8B5CF6", bg: "bg-[#ece5f5]", gradient: "from-[#ece5f5] to-[#e9d5ff]" }, // Apr
+  { name: "Sunny Yellow", color: "#EAB308", bg: "bg-[#f5f5e5]", gradient: "from-[#f5f5e5] to-[#fef08a]" }, // May
+  { name: "Summer Orange", color: "#F97316", bg: "bg-[#f5eee5]", gradient: "from-[#f5eee5] to-[#fed7aa]" },// Jun
+  { name: "Ocean Cyan", color: "#06B6D4", bg: "bg-[#e5f1f5]", gradient: "from-[#e5f1f5] to-[#a5f3fc]" },   // Jul
+  { name: "Warm Red", color: "#EF4444", bg: "bg-[#f5e6e5]", gradient: "from-[#f5e6e5] to-[#fecaca]" },     // Aug
+  { name: "Autumn Amber", color: "#D97706", bg: "bg-[#f5ebe5]", gradient: "from-[#f5ebe5] to-[#fed7aa]" }, // Sep
+  { name: "Fall Brown", color: "#A16207", bg: "bg-[#edeae5]", gradient: "from-[#edeae5] to-[#fed7aa]" },   // Oct
+  { name: "Stormy Grey", color: "#64748B", bg: "bg-[#e8e9eb]", gradient: "from-[#e8e9eb] to-[#cbd5e1]" },   // Nov
+  { name: "Frosty Teal", color: "#0EA5E9", bg: "bg-[#e5f2f5]", gradient: "from-[#e5f2f5] to-[#bae6fd]" }    // Dec
+];
+
 const RING_COUNT = 43;
 const HERO_VIDEO_SRC = "/climber.mp4";
 const ASSET_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -159,6 +174,10 @@ export default function Home() {
   const [videoFailed, setVideoFailed] = useState(false);
 
   const monthName = monthFormatter.format(viewDate).toUpperCase();
+  const currentTheme = MONTH_THEMES[viewDate.getMonth()];
+  const ACCENT = currentTheme.color;
+  const currentTheme = MONTH_THEMES[viewDate.getMonth()];
+  const ACCENT = currentTheme.color;
   const yearLabel = String(viewDate.getFullYear());
   const cells = useMemo(() => buildCalendarCells(viewDate), [viewDate]);
   const flipVariants = {
@@ -472,7 +491,7 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen items-start justify-center bg-[#e5e5e8] px-2 pb-8 pt-8 sm:px-3 sm:pb-10 sm:pt-12">
+    <main className={`flex min-h-screen items-start justify-center px-2 pb-8 pt-8 sm:px-3 sm:pb-10 sm:pt-12 transition-colors duration-1000 ease-in-out bg-gradient-to-br ${currentTheme.gradient}`}>
       <section className="w-full max-w-[548px]">
         <div className="pointer-events-none relative mx-auto h-[64px] w-full">
           <svg
@@ -776,7 +795,7 @@ export default function Home() {
                       key={day}
                       className={cx(
                         "text-[11px] font-semibold tracking-[0.03em] sm:text-[12px]",
-                        isWeekend ? "text-[#27A8DF]" : "text-[#565656]"
+                        isWeekend ? "text-current" : "text-[#565656]"
                       )}
                     >
                       {day}
@@ -834,14 +853,14 @@ export default function Home() {
                         <span className="absolute inset-x-1 inset-y-[3px] rounded-md bg-[#E7F4FC]" />
                       )}
                       {(isStart || isEnd) && (
-                        <span className="absolute inset-[3px] rounded-full bg-[#27A8DF] shadow-[0_4px_10px_rgba(39,168,223,0.38)]" />
+                        <span className="absolute inset-[3px] rounded-full text-white" style={{ backgroundColor: ACCENT, boxShadow: `0 4px 10px ${ACCENT}60` }} />
                       )}
                       <span className="relative z-10">{date.getDate()}</span>
                       {hasHoliday && (
                         <span
                           className={cx(
                             "absolute right-[6px] top-[6px] h-1.5 w-1.5 rounded-full",
-                            isStart || isEnd ? "bg-white" : "bg-[#106F9A]"
+                            isStart || isEnd ? "bg-white" : "bg-[rgba(0,0,0,0.4)]"
                           )}
                         />
                       )}
@@ -863,7 +882,7 @@ export default function Home() {
                   <span />
                 )}
                 <span className="inline-flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-[#7f828a]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#106F9A]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-black/40" />
                   Holiday Marker
                 </span>
               </div>
@@ -875,7 +894,7 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setMonthWithOffset(-1)}
-            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#6d6f77] transition hover:text-[#43454b]"
+            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#6d6f77] transition" style={{ "--hover-color": ACCENT } as React.CSSProperties} onMouseEnter={(e) => ((e.target as HTMLElement).style.color = ACCENT)} onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#6d6f77")}
           >
             ← PREV
           </button>
@@ -891,7 +910,7 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setMonthWithOffset(1)}
-            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#27A8DF] transition hover:text-[#106F9A]"
+            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#6d6f77] transition" style={{ "--hover-color": ACCENT } as React.CSSProperties} onMouseEnter={(e) => ((e.target as HTMLElement).style.color = ACCENT)} onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#6d6f77")}
           >
             NEXT →
           </button>
