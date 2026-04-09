@@ -176,8 +176,6 @@ export default function Home() {
   const monthName = monthFormatter.format(viewDate).toUpperCase();
   const currentTheme = MONTH_THEMES[viewDate.getMonth()];
   const ACCENT = currentTheme.color;
-  const currentTheme = MONTH_THEMES[viewDate.getMonth()];
-  const ACCENT = currentTheme.color;
   const yearLabel = String(viewDate.getFullYear());
   const cells = useMemo(() => buildCalendarCells(viewDate), [viewDate]);
   const flipVariants = {
